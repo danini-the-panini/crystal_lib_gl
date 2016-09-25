@@ -1,0 +1,97 @@
+#
+# 'rake' to generate 'lib_gl/command.cr', etc.
+#
+require 'rake/clean'
+require_relative 'get_gl_xml'
+require_relative 'generate_enum'
+# require_relative 'generate_command'
+# require_relative 'generate_ext_enum'
+# require_relative 'generate_ext_command'
+# require_relative 'generate_es_enum'
+# require_relative 'generate_es_command'
+# require_relative 'generate_es_ext_enum'
+# require_relative 'generate_es_ext_command'
+
+CLEAN.include( FileList['../src/lib_gl/enum.cr',
+                        '../src/lib_gl/command.cr',
+                        '../src/lib_gl/ext_enum.cr',
+                        '../src/lib_gl/ext_command.cr',
+                        '../src/lib_gl/es_enum.cr',
+                        '../src/lib_gl/es_command.cr',
+                        '../src/lib_gl/es_ext_enum.cr',
+                        '../src/lib_gl/es_ext_command.cr'] )
+
+
+task 'default' => 'wrapper'
+
+task 'wrapper' => [
+  'enum',
+  # 'command',
+  # 'ext_enum',
+  # 'ext_command',
+  # 'es_enum',
+  # 'es_command',
+  # 'es_ext_enum',
+  # 'es_ext_command'
+]
+
+task 'enum' => '../src/lib_gl/enum.cr'
+# task 'command' => '../src/lib_gl/command.cr'
+# task 'ext_enum' => '../src/lib_gl/ext_enum.cr'
+# task 'ext_command' => '../src/lib_gl/ext_command.cr'
+# task 'es_enum' => '../src/lib_gl/es_enum.cr'
+# task 'es_command' => '../src/lib_gl/es_command.cr'
+# task 'es_ext_enum' => '../src/lib_gl/es_ext_enum.cr'
+# task 'es_ext_command' => '../src/lib_gl/es_ext_command.cr'
+
+file '../src/lib_gl/enum.cr' => './gl.xml' do |t|
+  open('../src/lib_gl/enum.cr', 'wb') do |file|
+    GLEnumCodeGenerator.generate_enum(file)
+  end
+end
+
+# file '../src/lib_gl/command.cr' => './gl.xml' do |t|
+#   open('../src/lib_gl/command.cr', 'wb') do |file|
+#     GLCommandCodeGenerator.generate_command(file)
+#   end
+# end
+#
+# file '../src/lib_gl/ext_enum.cr' => './gl.xml' do |t|
+#   open('../src/lib_gl/ext_enum.cr', 'wb') do |file|
+#     GLExtEnumCodeGenerator.generate_enum(file)
+#   end
+# end
+#
+# file '../src/lib_gl/ext_command.cr' => './gl.xml' do |t|
+#   open('../src/lib_gl/ext_command.cr', 'wb') do |file|
+#     GLExtCommandCodeGenerator.generate_command(file)
+#   end
+# end
+#
+# file '../src/lib_gl/es_enum.cr' => './gl.xml' do |t|
+#   open('../src/lib_gl/es_enum.cr', 'wb') do |file|
+#     GLESEnumCodeGenerator.generate_enum(file)
+#   end
+# end
+#
+# file '../src/lib_gl/es_command.cr' => './gl.xml' do |t|
+#   open('../src/lib_gl/es_command.cr', 'wb') do |file|
+#     GLESCommandCodeGenerator.generate_command(file)
+#   end
+# end
+#
+# file '../src/lib_gl/es_ext_enum.cr' => './gl.xml' do |t|
+#   open('../src/lib_gl/es_ext_enum.cr', 'wb') do |file|
+#     GLESExtEnumCodeGenerator.generate_enum(file)
+#   end
+# end
+#
+# file '../src/lib_gl/es_ext_command.cr' => './gl.xml' do |t|
+#   open('../src/lib_gl/es_ext_command.cr', 'wb') do |file|
+#     GLESExtCommandCodeGenerator.generate_command(file)
+#   end
+# end
+
+file './gl.xml' do
+  get_gl_xml()
+end
