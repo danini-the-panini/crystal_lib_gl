@@ -4,7 +4,7 @@
 require 'rake/clean'
 require_relative 'get_gl_xml'
 require_relative 'generate_enum'
-# require_relative 'generate_command'
+require_relative 'generate_command'
 # require_relative 'generate_ext_enum'
 # require_relative 'generate_ext_command'
 # require_relative 'generate_es_enum'
@@ -26,7 +26,7 @@ task 'default' => 'wrapper'
 
 task 'wrapper' => [
   'enum',
-  # 'command',
+  'command',
   # 'ext_enum',
   # 'ext_command',
   # 'es_enum',
@@ -36,7 +36,7 @@ task 'wrapper' => [
 ]
 
 task 'enum' => '../src/lib_gl/enum.cr'
-# task 'command' => '../src/lib_gl/command.cr'
+task 'command' => '../src/lib_gl/command.cr'
 # task 'ext_enum' => '../src/lib_gl/ext_enum.cr'
 # task 'ext_command' => '../src/lib_gl/ext_command.cr'
 # task 'es_enum' => '../src/lib_gl/es_enum.cr'
@@ -50,11 +50,11 @@ file '../src/lib_gl/enum.cr' => './gl.xml' do |t|
   end
 end
 
-# file '../src/lib_gl/command.cr' => './gl.xml' do |t|
-#   open('../src/lib_gl/command.cr', 'wb') do |file|
-#     GLCommandCodeGenerator.generate_command(file)
-#   end
-# end
+file '../src/lib_gl/command.cr' => './gl.xml' do |t|
+  open('../src/lib_gl/command.cr', 'wb') do |file|
+    GLCommandCodeGenerator.generate_command(file)
+  end
+end
 #
 # file '../src/lib_gl/ext_enum.cr' => './gl.xml' do |t|
 #   open('../src/lib_gl/ext_enum.cr', 'wb') do |file|

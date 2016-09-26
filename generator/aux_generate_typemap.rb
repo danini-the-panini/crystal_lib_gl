@@ -1,81 +1,81 @@
 # (Execution example)
-# $ ruby aux_generate_typemap.rb > aux_typemap.rb 
+# $ ruby aux_generate_typemap.rb > aux_typemap.rb
 # $ head aux_typemap.rb
 # # [NOTICE] Automatically generated file
 # module OpenGL
 #   GL_TYPE_MAP = {
-#     'GLenum' => 'Fiddle::TYPE_INT',
-#     'GLboolean' => 'Fiddle::TYPE_CHAR',
-#     'GLbitfield' => 'Fiddle::TYPE_INT',
-#     'GLvoid' => 'Fiddle::TYPE_VOID',
-#     'GLbyte' => 'Fiddle::TYPE_CHAR',
-#     'GLshort' => 'Fiddle::TYPE_SHORT',
-#     'GLint' => 'Fiddle::TYPE_INT',
+#     'GLenum' => 'Enum',
+#     'GLboolean' => 'Boolean',
+#     'GLbitfield' => 'BitField',
+#     'GLvoid' => 'Void',
+#     'GLbyte' => 'Byte',
+#     'GLshort' => 'Short',
+#     'GLint' => 'Int',
 # $
 
 require 'rexml/document'
 require 'fiddle'
 
-CToFiddleTypeMap = {
-  'char' => 'Fiddle::TYPE_CHAR',
-  'signed char' => 'Fiddle::TYPE_CHAR',
-  'unsigned char' => '-Fiddle::TYPE_CHAR',
-  'short' => 'Fiddle::TYPE_SHORT',
-  'signed short' => 'Fiddle::TYPE_SHORT',
-  'unsigned short' => '-Fiddle::TYPE_SHORT',
-  'int' => 'Fiddle::TYPE_INT',
-  'signed int' => 'Fiddle::TYPE_INT',
-  'unsigned int' => '-Fiddle::TYPE_INT',
-  'int64_t' => 'Fiddle::TYPE_LONG_LONG',
-  'uint64_t' => '-Fiddle::TYPE_LONG_LONG',
-  'float' => 'Fiddle::TYPE_FLOAT',
-  'double' => 'Fiddle::TYPE_DOUBLE',
-  'ptrdiff_t' => 'Fiddle::TYPE_PTRDIFF_T',
-  'void' => 'Fiddle::TYPE_VOID',
-  'void *' => 'Fiddle::TYPE_VOIDP',
+CToCrystalTypeMap = {
+  'char' => 'Int8',
+  'signed char' => 'Int8',
+  'unsigned char' => 'UInt8',
+  'short' => 'Int16',
+  'signed short' => 'Int16',
+  'unsigned short' => 'UInt16',
+  'int' => 'Int32',
+  'signed int' => 'Int32',
+  'unsigned int' => 'UInt32',
+  'int64_t' => 'LibC::Int64T',
+  'uint64_t' => 'LibC::UInt64T',
+  'float' => 'Float32',
+  'double' => 'Float64',
+  'ptrdiff_t' => 'PtrDiffT',
+  'void' => 'Void',
+  'void *' => 'Void*',
 }
 
-GLToFiddleTypeMap = {
-  'GLenum' => '-Fiddle::TYPE_INT',
-  'GLboolean' => '-Fiddle::TYPE_CHAR',
-  'GLbitfield' => '-Fiddle::TYPE_INT',
-  'GLvoid' => 'Fiddle::TYPE_VOID',
-  'GLbyte' => 'Fiddle::TYPE_CHAR',
-  'GLshort' => 'Fiddle::TYPE_SHORT',
-  'GLint' => 'Fiddle::TYPE_INT',
-  'GLclampx' => 'Fiddle::TYPE_INT',
-  'GLubyte' => '-Fiddle::TYPE_CHAR',
-  'GLushort' => '-Fiddle::TYPE_SHORT',
-  'GLuint' => '-Fiddle::TYPE_INT',
-  'GLsizei' => 'Fiddle::TYPE_INT',
-  'GLfloat' => 'Fiddle::TYPE_FLOAT',
-  'GLclampf' => 'Fiddle::TYPE_FLOAT',
-  'GLdouble' => 'Fiddle::TYPE_DOUBLE',
-  'GLclampd' => 'Fiddle::TYPE_DOUBLE',
-  'GLeglImageOES' => 'Fiddle::TYPE_VOIDP',
-  'GLchar' => 'Fiddle::TYPE_CHAR',
-  'GLcharARB' => 'Fiddle::TYPE_CHAR',
-  'GLhandleARB' => 'Fiddle::TYPE_VOIDP', # should be Fiddle::TYPE_INT for platforms other than __APPLE__
-  'GLhalfARB' => '-Fiddle::TYPE_SHORT',
-  'GLhalf' => '-Fiddle::TYPE_SHORT',
-  'GLfixed' => 'Fiddle::TYPE_INT',
-  'GLintptr' => 'Fiddle::TYPE_PTRDIFF_T',
-  'GLsizeiptr' => 'Fiddle::TYPE_PTRDIFF_T',
-  'GLint64' => 'Fiddle::TYPE_LONG_LONG',
-  'GLuint64' => '-Fiddle::TYPE_LONG_LONG',
-  'GLintptrARB' => 'Fiddle::TYPE_PTRDIFF_T',
-  'GLsizeiptrARB' => 'Fiddle::TYPE_PTRDIFF_T',
-  'GLint64EXT' => 'Fiddle::TYPE_LONG_LONG',
-  'GLuint64EXT' => '-Fiddle::TYPE_LONG_LONG',
-  'GLsync' => 'Fiddle::TYPE_VOIDP', # == struct __GLsync *
-  # 'struct _cl_context' => 'Fiddle::TYPE_VOIDP'
-  # 'struct _cl_event' => 'Fiddle::TYPE_VOIDP'
-  'GLDEBUGPROC' => 'Fiddle::TYPE_VOIDP', # == void ( *GLDEBUGPROC)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam);
-  'GLDEBUGPROCARB' => 'Fiddle::TYPE_VOIDP', # == void ( *GLDEBUGPROCARB)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam);
-  'GLDEBUGPROCKHR' => 'Fiddle::TYPE_VOIDP', # == void ( *GLDEBUGPROCKHR)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam);
-  'GLDEBUGPROCAMD' => 'Fiddle::TYPE_VOIDP', # == void ( *GLDEBUGPROCAMD)(GLuint id,GLenum category,GLenum severity,GLsizei length,const GLchar *message,void *userParam);
-  'GLhalfNV' => '-Fiddle::TYPE_SHORT',
-  'GLvdpauSurfaceNV' => 'Fiddle::TYPE_PTRDIFF_T', # == GLintptr
+GLToCrystalTypeMap = {
+  'GLenum' => 'Enum',
+  'GLboolean' => 'Boolean',
+  'GLbitfield' => 'BitField',
+  'GLvoid' => 'Void',
+  'GLbyte' => 'Byte',
+  'GLshort' => 'Short',
+  'GLint' => 'Int',
+  'GLclampx' => 'ClampX',
+  'GLubyte' => 'UByte',
+  'GLushort' => 'UShort',
+  'GLuint' => 'UInt',
+  'GLsizei' => 'SizeI',
+  'GLfloat' => 'Float',
+  'GLclampf' => 'ClampF',
+  'GLdouble' => 'Double',
+  'GLclampd' => 'ClampD',
+  'GLeglImageOES' => 'EGLImageOES',
+  'GLchar' => 'Char',
+  'GLcharARB' => 'CharARB',
+  'GLhandleARB' => 'HandleARB',
+  'GLhalfARB' => 'HalfARB',
+  'GLhalf' => 'Half',
+  'GLfixed' => 'Fixed',
+  'GLintptr' => 'IntPtr',
+  'GLsizeiptr' => 'SizeIPtr',
+  'GLint64' => 'Int64',
+  'GLuint64' => 'UInt64',
+  'GLintptrARB' => 'IntPtrARB',
+  'GLsizeiptrARB' => 'SizeIPtrARB',
+  'GLint64EXT' => 'Int64EXT',
+  'GLuint64EXT' => 'UInt64EXT',
+  'GLsync' => 'Sync',
+  # 'struct _cl_context' => 'VoidP'
+  # 'struct _cl_event' => 'VoidP'
+  'GLDEBUGPROC' => 'DebugProc',
+  'GLDEBUGPROCARB' => 'DebugProcARB',
+  'GLDEBUGPROCKHR' => 'DebugProcKHR',
+  'GLDEBUGPROCAMD' => 'DebugProcAMD',
+  'GLhalfNV' => 'HalfNV',
+  'GLvdpauSurfaceNV' => 'VDPAUSurfaceNV',
 }
 
 GLTypeMapEntry = Struct.new( :def_name, :ctype_name )
@@ -121,14 +121,14 @@ if __FILE__ == $0
   puts "module OpenGL"
   puts "  GL_TYPE_MAP = {"
 
-  # Resolve OpenGL types to corresponding Fiddle type ('Fiddle::TYPE_XX')
+  # Resolve OpenGL types to corresponding Fiddle type ('TYPE_XX')
   gl_type_map.each do |t|
-    fiddle_type = CToFiddleTypeMap[t.ctype_name] # ex.) GLint -> Fiddle::TYPE_INT
+    fiddle_type = CToCrystalTypeMap[t.ctype_name] # ex.) GLint -> TYPE_INT
     comment = nil
     if fiddle_type == nil # GL types defined by typdef of another GL type (GLfixed, etc.).
-      fiddle_type = GLToFiddleTypeMap[t.ctype_name] # ex.) GLfixed -> GLint -> Fiddle::TYPE_INT
+      fiddle_type = GLToCrystalTypeMap[t.ctype_name] # ex.) GLfixed -> GLint -> TYPE_INT
       if fiddle_type == nil # fallback
-        fiddle_type = 'Fiddle::TYPE_VOIDP'
+        fiddle_type = 'VoidP'
         comment = '<- *** [CHECK] Cannot resolved to any Fiddle type. You might need tweaking for this. ***'
       end
     end
@@ -138,7 +138,7 @@ if __FILE__ == $0
   puts ""
 
   # Copy C/C++ type map
-  CToFiddleTypeMap.each do |t|
+  CToCrystalTypeMap.each do |t|
     puts "    '#{t[0]}' => '#{t[1]}',"
   end
 

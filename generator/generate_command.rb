@@ -10,10 +10,10 @@ module GLCommandCodeGenerator
 
     # Output
     out.puts GLCodeGeneratorCommon::HeaderComment
+    out.puts 'require "./types"'
     out.puts ""
-    out.puts "require 'fiddle'"
-    out.puts ""
-    out.puts "module OpenGL"
+    out.puts '@[Link("GL")]'
+    out.puts "lib LibGL"
     out.puts ""
 
     GLCodeGeneratorCommon.generate_method(out, gl_std_cmd_map)

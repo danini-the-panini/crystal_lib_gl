@@ -159,40 +159,31 @@ module GLCodeGeneratorCommon
     return gl_cmd_map
   end
 
+  def self.generate_crystal_type(c_or_gl_type)
+    resolved_type = OpenGL::GL_TYPE_MAP[c_or_gl_type.gsub(/([\[\]\*]|const)/, '').strip]
+    num_ptr = c_or_gl_type.count("*") + c_or_gl_type.count( "[" )
+    if resolved_type == nil
+      $stderr.puts "[ERROR] crystal_lib_gl generator script : Unknown type '#{c_or_gl_type}' detected. Exiting..."
+      exit
+    end
+    resolved_type + ("*" * num_ptr)
+  end
+
   def self.generate_method(out, gl_cmd_map)
     gl_cmd_map.each_pair do |api, map_entry|
-      # Arguments
-      arg_names = []
+      crystal_api = api.gsub(/^gl([A-Z])/) { |a| a[2].downcase }
+
+      arg_types = []
       map_entry.type_names.each do |t|
-        resolved_gl_type = OpenGL::GL_TYPE_MAP[t]
-        is_array = t.include?( "[" )
-        is_ptr = t.end_with?( '*' )
-        if !is_ptr && !is_array && resolved_gl_type == nil
-          $stderr.puts "[ERROR] crystal_lib_gl generator script : Unknown type '#{t}' detected. Exiting..."
-          exit
-        end
-        arg_names << ((is_ptr || is_array) ? 'Fiddle::TYPE_VOIDP' : resolved_gl_type)
+        arg_types << generate_crystal_type(t)
       end
-      out.print "  GL_FUNCTIONS_ARGS_MAP[:#{api}] = ["
-      arg_names.each_with_index do |a, i| out.printf "#{a}%s", (i < arg_names.length-1 ? ", " : "") end
-      out.puts "]"
+      arguments = map_entry.var_names.zip(arg_types).map { |(name, type)| "#{name} : #{type}" }.join(", ")
 
-      # Return value
-      is_ptr = map_entry.ret_name.end_with?( '*' )
-      out.puts "  GL_FUNCTIONS_RETVAL_MAP[:#{api}] = #{is_ptr ? 'Fiddle::TYPE_VOIDP' : OpenGL::GL_TYPE_MAP[map_entry.ret_name]}"
+      return_type = generate_crystal_type(map_entry.ret_name)
 
-      # API entry
-
-      # Adds prefix/suffix '_' to avoid conflict with Ruby's keyword
-      # ex.) glDrawRangeElements(mode, start, end, count, type, indices) <- 'end' is Ruby's reserved keyword.
-      vars = map_entry.var_names.collect{|v| '_'+v+'_'}.join(", ")
-
-      out.puts "  def #{api}(#{vars})"
-      out.puts "    f = OpenGL::get_command(:#{api})"
-      out.puts "    f.call(#{vars})"
-      out.puts "  end"
-      out.puts ""
+      out.puts "  fun #{crystal_api} = #{api}(#{arguments}) : #{return_type}"
     end
+    out.puts ""
     out.puts "end"
   end
 
