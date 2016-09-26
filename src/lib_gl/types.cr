@@ -1,6 +1,10 @@
 require "lib_c"
 
+{% if flag?(:apple) %}
+@[Link(framework: "OpenGL")]
+{% else %}
 @[Link("GL")]
+{% end %}
 lib LibGL
   # Crystal doesn't seem to define this anymore
   {% if flag?(:x86_64) %}
