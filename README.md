@@ -28,6 +28,14 @@ TODO: Write usage instructions here
 
 TODO: Write development instructions here
 
+
+## See Also
+
+1. [LibGLFW3 bindings for Crystal](https://github.com/jellymann/crystal_lib_glfw3)
+2. [Idiomatic Crystal API for GLFW](https://github.com/jellymann/crystal_glfw) (makes lib_glfw3 nicer to work with)
+3. [Crystal OpenGL Samples](https://github.com/jellymann/crystal_opengl_samples)
+
+
 ## Contributing
 
 1. Fork it ( https://github.com/jellymann/crystal_lib_gl/fork )
