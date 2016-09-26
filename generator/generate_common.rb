@@ -21,6 +21,14 @@ module GLCodeGeneratorCommon
 # [NOTICE] This is an automatically generated file.
   HEADER
 
+  LibLink = <<-LINK
+{% if flag?(:apple) %}
+@[Link(framework: "OpenGL")]
+{% else %}
+@[Link("GL")]
+{% end %}
+  LINK
+
   # Build feature map (Unused currently)
   def self.build_feature_map(doc)
     features = Hash.new

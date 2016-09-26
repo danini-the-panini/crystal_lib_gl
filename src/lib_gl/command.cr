@@ -4,7 +4,11 @@
 # [NOTICE] This is an automatically generated file.
 require "./types"
 
+{% if flag?(:apple) %}
+@[Link(framework: "OpenGL")]
+{% else %}
 @[Link("GL")]
+{% end %}
 lib LibGL
 
   fun cullFace = glCullFace(mode : Enum) : Void

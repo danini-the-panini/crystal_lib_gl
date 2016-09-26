@@ -3,7 +3,11 @@
 #
 # [NOTICE] This is an automatically generated file.
 
+{% if flag?(:apple) %}
+@[Link(framework: "OpenGL")]
+{% else %}
 @[Link("GL")]
+{% end %}
 lib LibGL
 
   DEPTH_BUFFER_BIT = 0x00000100

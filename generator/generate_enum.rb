@@ -16,7 +16,7 @@ module GLEnumCodeGenerator
     # Output
     out.puts GLCodeGeneratorCommon::HeaderComment
     out.puts ""
-    out.puts '@[Link("GL")]'
+    out.puts GLCodeGeneratorCommon::LibLink
     out.puts "lib LibGL"
     out.puts ""
     gl_std_enum_map.each do |enum|

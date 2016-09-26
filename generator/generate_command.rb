@@ -12,7 +12,7 @@ module GLCommandCodeGenerator
     out.puts GLCodeGeneratorCommon::HeaderComment
     out.puts 'require "./types"'
     out.puts ""
-    out.puts '@[Link("GL")]'
+    out.puts GLCodeGeneratorCommon::LibLink
     out.puts "lib LibGL"
     out.puts ""
 
