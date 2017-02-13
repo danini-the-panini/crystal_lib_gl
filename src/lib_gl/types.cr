@@ -22,7 +22,7 @@ lib LibGL
   alias ClampX = Int32
   alias UByte = UInt8
   alias UShort = UInt16
-  alias UInt = Int32
+  alias UInt = UInt32
   alias SizeI = Int32
   alias Float = Float32
   alias ClampF = Float32
