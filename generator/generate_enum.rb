@@ -20,7 +20,7 @@ module GLEnumCodeGenerator
     out.puts "lib LibGL"
     out.puts ""
     gl_std_enum_map.each do |enum|
-      out.print "  #{remove_gl_prefix(enum[0])} = #{enum[1]}\n"
+      out.print "  #{remove_gl_prefix(enum[0])} = #{enum[1]}u32\n"
     end
     out.puts ""
     out.puts "end"
