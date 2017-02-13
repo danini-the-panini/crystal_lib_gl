@@ -109,11 +109,12 @@ module GLCodeGeneratorCommon
         proto_residue.strip!
       end
       map_entry.ret_name = if proto_ptype != nil
-                             proto_ptype.text.strip
+                             proto_ptype.text.strip.tap do |x|
+                               x << ' *' if proto_residue =~ /\*/
+                             end
                            else
                              proto_tag.text.strip
                            end
-      map_entry.ret_name << ' *' if proto_residue =~ /\*/
 
       # Patterns of contents inside '<param>...</param>':
       # * <ptype>GLenum</ptype> <name>mode</name> (glBegin)
@@ -132,11 +133,12 @@ module GLCodeGeneratorCommon
           param_residue.strip!
         end
         type_name = if param_ptype != nil
-                      param_ptype.text.strip
+                      param_ptype.text.strip.tap do |x|
+                        x << ' *' if param_residue =~ /\*/ || param_residue =~/\[.+\]/
+                      end
                     else
                       param_tag.text.strip
                     end
-        type_name << ' *' if param_residue =~ /\*/ || param_residue =~/\[.+\]/
         map_entry.type_names << type_name
         map_entry.var_names << var_name
       end
