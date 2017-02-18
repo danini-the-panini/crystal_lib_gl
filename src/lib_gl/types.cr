@@ -29,8 +29,8 @@ lib LibGL
   alias Double = Float64
   alias ClampD = Float64
   alias EGLImageOES = Void*
-  alias Char = Int8
-  alias CharARB = Int8
+  alias Char = LibC::Char
+  alias CharARB = LibC::Char
   {% if flag?(:apple) %}
     alias HandleARB = Void*
   {% else %}
