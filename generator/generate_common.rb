@@ -110,7 +110,8 @@ module GLCodeGeneratorCommon
       end
       map_entry.ret_name = if proto_ptype != nil
                              proto_ptype.text.strip.tap do |x|
-                               x << ' *' if proto_residue =~ /\*/
+                               num_stars = proto_residue.count('*')
+                               x << " #{'*' * num_stars}" if num_stars > 0
                              end
                            else
                              proto_tag.text.strip
@@ -134,7 +135,8 @@ module GLCodeGeneratorCommon
         end
         type_name = if param_ptype != nil
                       param_ptype.text.strip.tap do |x|
-                        x << ' *' if param_residue =~ /\*/ || param_residue =~/\[.+\]/
+                        num_stars = param_residue.count('*') + param_residue.count('[]')
+                        x << " #{'*' * num_stars}" if num_stars > 0
                       end
                     else
                       param_tag.text.strip

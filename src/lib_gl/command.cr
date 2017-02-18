@@ -497,7 +497,7 @@ lib LibGL
   fun isProgram = glIsProgram(program : UInt) : Boolean
   fun isShader = glIsShader(shader : UInt) : Boolean
   fun linkProgram = glLinkProgram(program : UInt) : Void
-  fun shaderSource = glShaderSource(shader : UInt, count : SizeI, string : Char*, length : Int*) : Void
+  fun shaderSource = glShaderSource(shader : UInt, count : SizeI, string : Char**, length : Int*) : Void
   fun useProgram = glUseProgram(program : UInt) : Void
   fun uniform1f = glUniform1f(location : Int, v0 : Float) : Void
   fun uniform2f = glUniform2f(location : Int, v0 : Float, v1 : Float) : Void
@@ -572,7 +572,7 @@ lib LibGL
   fun endTransformFeedback = glEndTransformFeedback() : Void
   fun bindBufferRange = glBindBufferRange(target : Enum, index : UInt, buffer : UInt, offset : IntPtr, size : SizeIPtr) : Void
   fun bindBufferBase = glBindBufferBase(target : Enum, index : UInt, buffer : UInt) : Void
-  fun transformFeedbackVaryings = glTransformFeedbackVaryings(program : UInt, count : SizeI, varyings : Char*, bufferMode : Enum) : Void
+  fun transformFeedbackVaryings = glTransformFeedbackVaryings(program : UInt, count : SizeI, varyings : Char**, bufferMode : Enum) : Void
   fun getTransformFeedbackVarying = glGetTransformFeedbackVarying(program : UInt, index : UInt, bufSize : SizeI, length : SizeI*, size : SizeI*, type : Enum*, name : Char*) : Void
   fun clampColor = glClampColor(target : Enum, clamp : Enum) : Void
   fun beginConditionalRender = glBeginConditionalRender(id : UInt, mode : Enum) : Void
@@ -651,7 +651,7 @@ lib LibGL
   fun texBuffer = glTexBuffer(target : Enum, internalformat : Enum, buffer : UInt) : Void
   fun primitiveRestartIndex = glPrimitiveRestartIndex(index : UInt) : Void
   fun copyBufferSubData = glCopyBufferSubData(readTarget : Enum, writeTarget : Enum, readOffset : IntPtr, writeOffset : IntPtr, size : SizeIPtr) : Void
-  fun getUniformIndices = glGetUniformIndices(program : UInt, uniformCount : SizeI, uniformNames : Char*, uniformIndices : UInt*) : Void
+  fun getUniformIndices = glGetUniformIndices(program : UInt, uniformCount : SizeI, uniformNames : Char**, uniformIndices : UInt*) : Void
   fun getActiveUniformsiv = glGetActiveUniformsiv(program : UInt, uniformCount : SizeI, uniformIndices : UInt*, pname : Enum, params : Int*) : Void
   fun getActiveUniformName = glGetActiveUniformName(program : UInt, uniformIndex : UInt, bufSize : SizeI, length : SizeI*, uniformName : Char*) : Void
   fun getUniformBlockIndex = glGetUniformBlockIndex(program : UInt, uniformBlockName : Char*) : UInt
@@ -791,7 +791,7 @@ lib LibGL
   fun programParameteri = glProgramParameteri(program : UInt, pname : Enum, value : Int) : Void
   fun useProgramStages = glUseProgramStages(pipeline : UInt, stages : BitField, program : UInt) : Void
   fun activeShaderProgram = glActiveShaderProgram(pipeline : UInt, program : UInt) : Void
-  fun createShaderProgramv = glCreateShaderProgramv(type : Enum, count : SizeI, strings : Char*) : UInt
+  fun createShaderProgramv = glCreateShaderProgramv(type : Enum, count : SizeI, strings : Char**) : UInt
   fun bindProgramPipeline = glBindProgramPipeline(pipeline : UInt) : Void
   fun deleteProgramPipelines = glDeleteProgramPipelines(n : SizeI, pipelines : UInt*) : Void
   fun genProgramPipelines = glGenProgramPipelines(n : SizeI, pipelines : UInt*) : Void
